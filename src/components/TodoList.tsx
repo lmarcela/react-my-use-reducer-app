@@ -3,11 +3,11 @@ import React, { useReducer, useState } from "react";
 type Todo = {
   id: number;
   text: string;
-}
+};
 
 type State = {
   todos: Todo[];
-}
+};
 
 type Action =
   | { type: "ADD_TODO"; payload: string }
@@ -19,17 +19,21 @@ const initialState: State = {
 
 const todoReducer = (state: State, action: Action) => {
   switch (action.type) {
-    case "ADD_TODO":
-      {
-        const newTodo: Todo = { id: state.todos.length + 1, text: action.payload }
-        return { todos: [...state.todos, newTodo] }
-      }
+    case "ADD_TODO": {
+      const newTodo: Todo = {
+        id: state.todos.length + 1,
+        text: action.payload,
+      };
+      return { todos: [...state.todos, newTodo] };
+    }
     case "REMOVE_TODO":
-      return { todos: state.todos.filter(todo => todo.id !== action.payload) }
+      return {
+        todos: state.todos.filter((todo) => todo.id !== action.payload),
+      };
     default:
       return state;
   }
-}
+};
 
 const emojiMap: { [key: string]: string } = {
   eat: "🍔",
@@ -42,18 +46,18 @@ const TodoList: React.FC = () => {
   const [todoText, setTodoText] = useState("");
 
   const handleAddTodo = () => {
-    const mappedText = emojiMap[todoText.toLowerCase() || todoText]
+    const mappedText = emojiMap[todoText.toLowerCase()] || todoText;
     if (mappedText.trim()) {
       dispatch({ type: "ADD_TODO", payload: mappedText });
       setTodoText("");
     }
-  }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       handleAddTodo();
     }
-  }
+  };
 
   return (
     <div>
@@ -67,19 +71,17 @@ const TodoList: React.FC = () => {
         placeholder="Add a new todo"
       />
       <ul>
-        {
-          state.todos.map((todo) => (
-            <li
-              key={todo.id}
-              onClick={() => dispatch({ type: "REMOVE_TODO", payload: todo.id })}
-            >
-              {todo.text}
-            </li>
-          ))
-        }
+        {state.todos.map((todo) => (
+          <li
+            key={todo.id}
+            onClick={() => dispatch({ type: "REMOVE_TODO", payload: todo.id })}
+          >
+            {todo.text}
+          </li>
+        ))}
       </ul>
     </div>
-  )
-}
+  );
+};
 
 export default TodoList;
